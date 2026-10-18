@@ -1,26 +1,188 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #000;
+  --fg: #e8e8e8;
+  --dim: #8a8a8a;
+  --line: #3a3a3a;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Sections ---------- */
+
+.panel {
+  position: relative;
+  z-index: 1; /* above the fixed hand canvas */
+  min-height: 100svh;
+  padding: clamp(1.5rem, 4vw, 4rem);
+}
+
+.panel h2 {
+  font-weight: 300;
+  font-size: clamp(1.75rem, 4vw, 3rem);
+  letter-spacing: 0.06em;
+  margin: 0 0 1rem;
+}
+
+.panel p {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.85rem;
+  line-height: 1.8;
+  letter-spacing: 0.08em;
+  color: var(--dim);
+  max-width: 36rem;
+}
+
+/* ---------- Hero ---------- */
+
+.hero-copy {
+  padding-top: clamp(1rem, 4vh, 3rem);
+}
+
+.dash {
+  display: block;
+  width: 1.5rem;
+  height: 1px;
+  background: var(--fg);
+  margin-bottom: 2rem;
+}
+
+.panel h1 {
+  font-weight: 300;
+  font-size: clamp(2.5rem, 7vw, 5.5rem);
+  line-height: 1.1;
+  letter-spacing: 0.06em;
+  margin: 0 0 2rem;
+}
+
+.cursor {
+  animation: blink 1.1s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.panel .sub {
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  margin: 0 0 2.5rem;
+}
+
+.explore {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3rem;
+  padding: 1rem 1.5rem;
+  border: 1px solid var(--line);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  color: var(--fg);
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.explore:hover,
+.explore:focus-visible {
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--fg);
+  outline: none;
+}
+
+/* ---------- Hand navigation ---------- */
+
+.hand-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  color: #d4d4d4;
+  font-family: var(--font-mono), monospace;
+}
+
+.handnav {
+  position: fixed;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+}
+
+.handnav ul {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.handnav li {
+  width: fit-content;
+}
+
+/* Vertical label, with a bar at its bottom end that marks the active page */
+.handnav a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  writing-mode: vertical-rl;
+  padding: 0 0.3rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  color: var(--dim);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.handnav a::after {
+  content: "";
+  width: 3px;
+  height: 2rem; /* space is always reserved, so nothing shifts */
+  background: var(--fg);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.3s;
+}
+
+.handnav a:hover,
+.handnav a:focus-visible,
+.handnav a.is-active {
+  color: var(--fg);
+  outline: none;
+}
+
+.handnav a.is-active::after {
+  transform: scaleY(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .cursor {
+    animation: none;
+  }
+  .handnav a::after {
+    transition: none;
+  }
 }
